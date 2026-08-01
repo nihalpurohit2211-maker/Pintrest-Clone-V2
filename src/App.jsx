@@ -151,9 +151,9 @@ function App() {
                         }
                     }}
                 />
-                <div className="nav-right">
+                {/* <div className="nav-right">
                     <button>🔔</button>
-                </div>
+                </div> */}
             </div>
 
             {/* Header for Saved Section */}
