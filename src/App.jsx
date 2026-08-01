@@ -1,5 +1,6 @@
 import "./Navbar.css";
 import "./Gallery.css";
+import logoImage from "./assets/logo.png";
 
 import { useState, useEffect } from "react";
 
@@ -113,7 +114,8 @@ function App() {
         <>
             {/* Sidebar */}
             <div className="sidebar">
-                <div className="logo">P</div>
+                <div className="logo"> <img src={logoImage} alt="Logo" style={{ width: "32px", height: "32px", objectFit: "contain" }} /></div>
+
                 <button 
                     className={activeTab === "home" ? "active-nav" : ""} 
                     onClick={() => {
