@@ -4,12 +4,12 @@ import "./InfoMatrixCard.css";
 function InfoMatrixCard({ photo, onClose }) {
     const [isHighResLoaded, setIsHighResLoaded] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [showMenu, setShowMenu] = useState(false); // Controls modal dropdown
 
     useEffect(() => {
         const savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
         setSaved(savedPhotos.includes(photo.id));
 
-        // Close card on 'Escape' key
         function handleKeyDown(e) {
             if (e.key === "Escape") onClose();
         }
@@ -32,28 +32,38 @@ function InfoMatrixCard({ photo, onClose }) {
         localStorage.setItem("saved", JSON.stringify(savedPhotos));
     }
 
-    // Low-res thumbnail placeholder for progressive loading inside the card
+    async function downloadImage(e) {
+        e.stopPropagation();
+        try {
+            const response = await fetch(photo.image);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `pinterest-clone-${photo.id}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            setShowMenu(false);
+        } catch (error) {
+            console.error("Image download failed:", error);
+            window.open(photo.image, "_blank"); 
+        }
+    }
+
     const lowResPlaceholder = `${photo.image}?auto=format&fit=crop&w=300&q=30`;
-    // Full high-resolution image URL
-    const highResUrl = `${photo.image}?auto=format&q=55`;
+    const highResUrl = `${photo.image}?auto=format&q=100`;
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
-            <div className="infomatrix-card" onClick={(e) => e.stopPropagation()}>
-                {/* Close Button */}
-                <button className="close-btn" onClick={onClose}>
-                    ✕
-                </button>
+            <div className="infomatrix-card" onClick={(e) => { e.stopPropagation(); setShowMenu(false); }}>
+                <button className="close-btn" onClick={onClose}>✕</button>
 
-                {/* Left Side: Progressive Full-Res Image Loading */}
                 <div className="card-image-wrapper">
                     {!isHighResLoaded && (
                         <div className="placeholder-container">
-                            <img
-                                src={lowResPlaceholder}
-                                alt="placeholder"
-                                className="blur-placeholder"
-                            />
+                            <img src={lowResPlaceholder} alt="placeholder" className="blur-placeholder" />
                             <div className="spinner"></div>
                         </div>
                     )}
@@ -65,10 +75,27 @@ function InfoMatrixCard({ photo, onClose }) {
                     />
                 </div>
 
-                {/* Right Side: Metadata Panel */}
                 <div className="card-details">
-                    <div className="card-actions">
-                        <button className="menu-btn">⋮</button>
+                    <div className="card-actions" style={{ position: "relative" }}>
+                        <button 
+                            className="menu-btn" 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowMenu(!showMenu);
+                            }}
+                        >
+                            ⋮
+                        </button>
+                        
+                        {/* Dropdown for the Modal */}
+                        {showMenu && (
+                            <div className="dropdown-menu" style={{ top: "45px", bottom: "auto", left: "0", right: "auto" }}>
+                                <button className="dropdown-item" onClick={downloadImage}>
+                                    Download Full Image
+                                </button>
+                            </div>
+                        )}
+
                         <button
                             className={`save-btn ${saved ? "saved" : ""}`}
                             onClick={toggleSave}
@@ -79,7 +106,6 @@ function InfoMatrixCard({ photo, onClose }) {
 
                     <div className="metadata-container">
                         <h2>InfoMatrix Card</h2>
-                        
                         <div className="meta-grid">
                             <div className="meta-item">
                                 <span className="meta-label">Photo ID</span>
@@ -91,9 +117,7 @@ function InfoMatrixCard({ photo, onClose }) {
                             </div>
                             <div className="meta-item">
                                 <span className="meta-label">Aspect Ratio</span>
-                                <span className="meta-value">
-                                    {(photo.width / photo.height).toFixed(2)}
-                                </span>
+                                <span className="meta-value">{(photo.width / photo.height).toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -101,9 +125,7 @@ function InfoMatrixCard({ photo, onClose }) {
                         <div className="tags-container">
                             {photo.tags && photo.tags.length > 0 ? (
                                 photo.tags.map((tag, index) => (
-                                    <span key={index} className="tag-chip">
-                                        #{tag}
-                                    </span>
+                                    <span key={index} className="tag-chip">#{tag}</span>
                                 ))
                             ) : (
                                 <span className="no-tags">No tags available</span>

@@ -60,9 +60,9 @@ function App() {
         loadFeed();
     }, []);
 
-    // -------------------------
+
     // Infinite Scroll
-    // -------------------------
+
     useEffect(() => {
         function handleScroll() {
             const bottom =

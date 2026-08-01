@@ -3,6 +3,7 @@ import "./Pin.css";
 
 function Pin({ photo, onPinClick }) {
     const [saved, setSaved] = useState(false);
+    const [showMenu, setShowMenu] = useState(false); // Controls the dropdown visibility
 
     useEffect(() => {
         let savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
@@ -10,7 +11,7 @@ function Pin({ photo, onPinClick }) {
     }, [photo.id]);
 
     function savePhoto(e) {
-        e.stopPropagation(); // Prevents opening the modal when clicking save
+        e.stopPropagation();
         let savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
 
         if (savedPhotos.includes(photo.id)) {
@@ -24,11 +25,39 @@ function Pin({ photo, onPinClick }) {
         localStorage.setItem("saved", JSON.stringify(savedPhotos));
     }
 
-    // Low-resolution URL optimization for high performance feed
-    const lowResUrl = `${photo.image}?auto=format&fit=crop&w=500&q=30`;
+    // Advanced Download Logic to bypass Cross-Origin opening in a new tab
+    async function downloadImage(e) {
+        e.stopPropagation(); // Stop the pin from opening the InfoMatrix card
+        try {
+            // 1. Fetch the image as binary data (Blob)
+            const response = await fetch(photo.image);
+            const blob = await response.blob();
+            
+            // 2. Create a temporary local URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // 3. Create a temporary anchor element and force the click
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `pinterest-clone-${photo.id}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            
+            // 4. Cleanup
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            setShowMenu(false); // Close the menu
+        } catch (error) {
+            console.error("Image download failed:", error);
+            // Fallback just in case CORS blocks the fetch
+            window.open(photo.image, "_blank"); 
+        }
+    }
+
+    const lowResUrl = `${photo.image}?auto=format&fit=crop&w=500&q=75`;
 
     return (
-        <div className="pin" onClick={() => onPinClick(photo)}>
+        <div className="pin" onClick={() => onPinClick(photo)} onMouseLeave={() => setShowMenu(false)}>
             <img
                 src={lowResUrl}
                 alt={photo.tags ? photo.tags.join(" ") : ""}
@@ -43,9 +72,24 @@ function Pin({ photo, onPinClick }) {
                     {saved ? "Saved" : "Save"}
                 </button>
 
-                <button className="menu" onClick={(e) => e.stopPropagation()}>
+                <button 
+                    className="menu" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu(!showMenu);
+                    }}
+                >
                     ⋮
                 </button>
+
+                {/* Dropdown Menu */}
+                {showMenu && (
+                    <div className="dropdown-menu">
+                        <button className="dropdown-item" onClick={downloadImage}>
+                            Download Image
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -56,6 +56,36 @@
     font-size: 20px;
 }
 
+/* --- NEW: Dropdown Menu Styles --- */
+.dropdown-menu {
+    position: absolute;
+    bottom: 55px; /* Places it just above the three dots */
+    right: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 8px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    text-align: left;
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.dropdown-item:hover {
+    background: #efefef;
+}
+
 /* Skeleton Loader Styling */
 .skeleton-pin {
     width: 100%;
@@ -68,13 +98,7 @@
 }
 
 @keyframes pulse {
-    0% {
-        background-color: #e0e0e0;
-    }
-    50% {
-        background-color: #f0f0f0;
-    }
-    100% {
-        background-color: #e0e0e0;
-    }
+    0% { background-color: #e0e0e0; }
+    50% { background-color: #f0f0f0; }
+    100% { background-color: #e0e0e0; }
 }
