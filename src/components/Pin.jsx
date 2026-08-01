@@ -31,7 +31,7 @@ function Pin({ photo }) {
 
     return (
 
-        <div className="Pin">
+        <div className="pin">
 
             <img
                 src={photo.image}
