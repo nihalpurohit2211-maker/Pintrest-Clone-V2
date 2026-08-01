@@ -4,6 +4,7 @@ import "./Gallery.css";
 import { useState, useEffect } from "react";
 
 import Pin from "./components/Pin.jsx";
+import InfoMatrixCard from "./components/InfoMatrixCard.jsx";
 import searchPhotos from "./search.js";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
     const [visible, setVisible] = useState(10);
     const [search, setSearch] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
 
     // -------------------------
     // Load Random Feed
@@ -64,7 +66,6 @@ function App() {
     // Search
     // -------------------------
     async function startSearch() {
-        // Empty search -> go back home
         if (search.trim() === "") {
             loadFeed();
             return;
@@ -77,7 +78,7 @@ function App() {
 
         await searchPhotos(search, (newBatch) => {
             setPhotos((prev) => [...prev, ...newBatch]);
-            setIsLoading(false); 
+            setIsLoading(false);
         });
 
         setIsLoading(false);
@@ -117,14 +118,13 @@ function App() {
 
             {/* Gallery */}
             <div className="gallery">
-                {photos
-                    .slice(0, visible)
-                    .map((photo) => (
-                        <Pin
-                            key={photo.id}
-                            photo={photo}
-                        />
-                    ))}
+                {photos.slice(0, visible).map((photo) => (
+                    <Pin
+                        key={photo.id}
+                        photo={photo}
+                        onPinClick={(p) => setSelectedPhoto(p)}
+                    />
+                ))}
 
                 {/* Skeletons */}
                 {isLoading &&
@@ -132,6 +132,14 @@ function App() {
                         <div key={`skeleton-${i}`} className="skeleton-pin"></div>
                     ))}
             </div>
+
+            {/* Pinterest InfoMatrix Card Modal */}
+            {selectedPhoto && (
+                <InfoMatrixCard
+                    photo={selectedPhoto}
+                    onClose={() => setSelectedPhoto(null)}
+                />
+            )}
 
             {/* End */}
             {!isLoading && visible >= photos.length && photos.length > 0 && (

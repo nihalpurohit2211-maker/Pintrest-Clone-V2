@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Pin.css";
 
-function Pin({ photo }) {
+function Pin({ photo, onPinClick }) {
     const [saved, setSaved] = useState(false);
 
-    function savePhoto() {
+    useEffect(() => {
+        let savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
+        setSaved(savedPhotos.includes(photo.id));
+    }, [photo.id]);
+
+    function savePhoto(e) {
+        e.stopPropagation(); // Prevents opening the modal when clicking save
         let savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
 
         if (savedPhotos.includes(photo.id)) {
             savedPhotos = savedPhotos.filter((id) => id !== photo.id);
             setSaved(false);
-        }
-        else {
+        } else {
             savedPhotos.push(photo.id);
             setSaved(true);
         }
@@ -19,11 +24,14 @@ function Pin({ photo }) {
         localStorage.setItem("saved", JSON.stringify(savedPhotos));
     }
 
+    // Low-resolution URL optimization for high performance feed
+    const lowResUrl = `${photo.image}?auto=format&fit=crop&w=500&q=30`;
+
     return (
-        <div className="pin">
+        <div className="pin" onClick={() => onPinClick(photo)}>
             <img
-                src={photo.image}
-                alt=""
+                src={lowResUrl}
+                alt={photo.tags ? photo.tags.join(" ") : ""}
                 loading="lazy"
             />
 
@@ -35,7 +43,7 @@ function Pin({ photo }) {
                     {saved ? "Saved" : "Save"}
                 </button>
 
-                <button className="menu">
+                <button className="menu" onClick={(e) => e.stopPropagation()}>
                     ⋮
                 </button>
             </div>

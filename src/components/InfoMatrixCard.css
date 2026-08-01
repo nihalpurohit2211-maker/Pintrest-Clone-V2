@@ -1,0 +1,209 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.infomatrix-card {
+    position: relative;
+    background: #ffffff;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    border-radius: 32px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.close-btn:hover {
+    background: #ffffff;
+}
+
+/* Image Section */
+.card-image-wrapper {
+    flex: 1.2;
+    background: #111;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.placeholder-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blur-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(20px);
+    transform: scale(1.1);
+}
+
+.spinner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.full-res-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-height: 85vh;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.full-res-image.loading {
+    opacity: 0;
+}
+
+.full-res-image.loaded {
+    opacity: 1;
+}
+
+/* Details Section */
+.card-details {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.menu-btn {
+    border: none;
+    background: #efefef;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.save-btn {
+    border: none;
+    background: red;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.save-btn.saved {
+    background: #111;
+}
+
+.metadata-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.meta-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8f8f8;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.meta-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.meta-value {
+    color: #111;
+    font-weight: 600;
+}
+
+.metadata-container h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-chip {
+    background: #efefef;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .infomatrix-card {
+        flex-direction: column;
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+    .card-image-wrapper {
+        min-height: 300px;
+    }
+}
