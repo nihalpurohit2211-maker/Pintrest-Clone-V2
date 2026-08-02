@@ -4,7 +4,7 @@ import "./InfoMatrixCard.css";
 function InfoMatrixCard({ photo, onClose }) {
     const [isHighResLoaded, setIsHighResLoaded] = useState(false);
     const [saved, setSaved] = useState(false);
-    const [showMenu, setShowMenu] = useState(false); // Controls modal dropdown
+    const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         const savedPhotos = JSON.parse(localStorage.getItem("saved")) || [];
@@ -52,8 +52,21 @@ function InfoMatrixCard({ photo, onClose }) {
         }
     }
 
+    // Mathematical helper to calculate fractional aspect ratio using GCD
+    function getAspectRatio(w, h) {
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+        const divisor = gcd(w, h);
+        return `${w / divisor}/${h / divisor}`;
+    }
+
+    // Low-res placeholder for initial blur-up
     const lowResPlaceholder = `${photo.image}?auto=format&fit=crop&w=300&q=30`;
-    const highResUrl = `${photo.image}?auto=format&q=100`;
+    
+    // Scaled down to ~65% resolution and 65% quality to eliminate rendering lag
+    const scaledWidth = Math.round((photo.width || 1200) * 0.65);
+    const highResUrl = `${photo.image}?auto=format&fit=max&w=${scaledWidth}&q=65`;
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -91,7 +104,7 @@ function InfoMatrixCard({ photo, onClose }) {
                         {showMenu && (
                             <div className="dropdown-menu" style={{ top: "45px", bottom: "auto", left: "0", right: "auto" }}>
                                 <button className="dropdown-item" onClick={downloadImage}>
-                                    Download Full Image
+                                    Download Image
                                 </button>
                             </div>
                         )}
@@ -108,6 +121,10 @@ function InfoMatrixCard({ photo, onClose }) {
                         <h2>InfoMatrix Card</h2>
                         <div className="meta-grid">
                             <div className="meta-item">
+                                <span className="meta-label">Author</span>
+                                <span className="meta-value">John Doe</span>
+                            </div>
+                            <div className="meta-item">
                                 <span className="meta-label">Photo ID</span>
                                 <span className="meta-value">{photo.id}</span>
                             </div>
@@ -117,14 +134,14 @@ function InfoMatrixCard({ photo, onClose }) {
                             </div>
                             <div className="meta-item">
                                 <span className="meta-label">Aspect Ratio</span>
-                                <span className="meta-value">{(photo.width / photo.height).toFixed(2)}</span>
+                                <span className="meta-value">{getAspectRatio(photo.width, photo.height)}</span>
                             </div>
                         </div>
 
                         <h3>Tags</h3>
                         <div className="tags-container">
                             {photo.tags && photo.tags.length > 0 ? (
-                                photo.tags.map((tag, index) => (
+                                photo.tags.slice(0, 3).map((tag, index) => (
                                     <span key={index} className="tag-chip">#{tag}</span>
                                 ))
                             ) : (
