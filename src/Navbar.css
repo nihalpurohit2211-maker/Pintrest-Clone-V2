@@ -5,11 +5,95 @@
     font-family: system-ui, -apple-system, sans-serif;
 }
 
+/* Light Mode (Default) */
 body {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
     color: #333;
+    transition: background 0.3s ease, color 0.3s ease;
 }
+
+/* --- NEW: DARK MODE OVERRIDES --- */
+body.dark {
+    background: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%);
+    color: #f1f1f1;
+}
+
+body.dark .sidebar {
+    background: rgba(0, 0, 0, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark .sidebar button {
+    color: #ddd;
+}
+
+body.dark .sidebar button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+body.dark .sidebar button.active-nav {
+    background-color: #fff;
+    color: #111;
+}
+
+body.dark .navbar input {
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark .navbar input:focus {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+body.dark .navbar input::placeholder {
+    color: #bbb;
+}
+
+body.dark .saved-desc {
+    color: #ccc !important;
+}
+
+body.dark .skeleton-pin {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* InfoMatrix Modal Dark Mode Fixes */
+body.dark .infomatrix-card,
+body.dark .card-details {
+    background: #222;
+    color: #f1f1f1;
+}
+body.dark .meta-grid {
+    background: #333;
+}
+body.dark .meta-value {
+    color: #fff;
+}
+body.dark .meta-label {
+    color: #aaa;
+}
+body.dark .tag-chip {
+    background: #333;
+    color: #ddd;
+}
+body.dark .dropdown-menu {
+    background: #222;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+body.dark .dropdown-item {
+    color: #fff;
+}
+body.dark .dropdown-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+body.dark .menu {
+    background: #222;
+    color: #fff;
+}
+/* --------------------------------- */
 
 /* Left Sidebar */
 .sidebar {
@@ -29,13 +113,13 @@ body {
 
     padding: 20px 0;
     z-index: 100;
+    transition: background 0.3s ease, border 0.3s ease;
 }
 
 .logo {
     margin-bottom: 30px;
 }
 
-/* Perfect circle buttons for Icons */
 .sidebar button {
     width: 50px;
     height: 50px;
@@ -73,7 +157,8 @@ body {
     margin-bottom: 20px;
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Top Navbar */
