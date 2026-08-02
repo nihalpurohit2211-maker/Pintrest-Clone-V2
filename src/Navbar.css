@@ -13,7 +13,7 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* --- NEW: DARK MODE OVERRIDES --- */
+/* --- DARK MODE OVERRIDES --- */
 body.dark {
     background: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%);
     color: #f1f1f1;
@@ -38,20 +38,56 @@ body.dark .sidebar button.active-nav {
     color: #111;
 }
 
-body.dark .navbar input {
+body.dark .navbar .search-input {
     background: rgba(0, 0, 0, 0.3);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-body.dark .navbar input:focus {
+body.dark .navbar .search-input:focus {
     background: rgba(0, 0, 0, 0.6);
 }
 
-body.dark .navbar input::placeholder {
+body.dark .navbar .search-input::placeholder {
     color: #bbb;
 }
 
+body.dark .login-btn {
+    background: #f1f1f1;
+    color: #111;
+}
+
+body.dark .login-btn:hover {
+    background: #ddd;
+}
+
+/* User Profile Dark Mode */
+body.dark .user-profile .username {
+    color: #fff;
+}
+body.dark .user-profile .avatar {
+    background: #333;
+    color: #fff;
+}
+
+/* Auth Modal Dark Mode */
+body.dark .login-modal {
+    background: rgba(30, 30, 30, 0.85);
+    color: #fff;
+}
+body.dark .login-modal h2 {
+    color: #fff;
+}
+body.dark .modal-input {
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+body.dark .modal-input:focus {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* InfoMatrix Dark Mode */
 body.dark .saved-desc {
     color: #ccc !important;
 }
@@ -60,7 +96,6 @@ body.dark .skeleton-pin {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* InfoMatrix Modal Dark Mode Fixes */
 body.dark .infomatrix-card,
 body.dark .card-details {
     background: #222;
@@ -93,7 +128,6 @@ body.dark .menu {
     background: #222;
     color: #fff;
 }
-/* --------------------------------- */
 
 /* Left Sidebar */
 .sidebar {
@@ -171,12 +205,14 @@ body.dark .menu {
     justify-content: space-between;
     padding: 0 30px;
     background: transparent; 
+    gap: 20px; 
 }
 
-.navbar input {
-    width: 100%;
+/* Search Bar */
+.navbar .search-input {
+    flex: 1; 
     padding: 15px 20px;
-    margin: 10px;
+    margin: 10px 0;
 
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
@@ -189,12 +225,139 @@ body.dark .menu {
     transition: 0.2s;
 }
 
-.navbar input:focus {
+.navbar .search-input:focus {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.navbar input::placeholder {
+.navbar .search-input::placeholder {
     font-size: 16px; 
     color: #888;
+}
+
+/* Nav Right / User Profile */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    background: #e60023; /* Pinterest Red */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.login-btn:hover {
+    background: #ad081b;
+}
+
+.login-btn:active {
+    transform: scale(0.95);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-profile .avatar {
+    width: 40px;
+    height: 40px;
+    background: #eef;
+    color: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.user-profile .username {
+    font-weight: bold;
+    color: #333;
+}
+
+/* --- NEW: Auth Modal Styles --- */
+.auth-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.login-modal {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 40px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.login-modal h2 {
+    color: #111;
+    margin-bottom: 5px;
+}
+
+.modal-input {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.modal-input:focus {
+    border-color: #888;
+}
+
+.uppercase-input {
+    text-transform: uppercase;
+}
+
+.login-submit-btn {
+    background: #e60023;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s ease;
+}
+
+.login-submit-btn:hover {
+    background: #ad081b;
+}
+
+.error-msg {
+    color: #e60023;
+    font-size: 14px;
+    margin-bottom: 15px;
+    font-weight: bold;
 }

@@ -18,8 +18,15 @@ function App() {
     // Track active tab: "home" or "saved"
     const [activeTab, setActiveTab] = useState("home");
     
-    // --- NEW: Theme State ---
+    // Theme State 
     const [theme, setTheme] = useState("light");
+
+    // --- NEW: Auth States ---
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loginUser, setLoginUser] = useState("");
+    const [loginPass, setLoginPass] = useState("");
+    const [loginError, setLoginError] = useState("");
 
     // Apply the theme class to the body tag whenever it changes
     useEffect(() => {
@@ -113,6 +120,20 @@ function App() {
         setIsLoading(false);
     }
 
+    // -------------------------
+    // Login Handler
+    // -------------------------
+    function handleLogin() {
+        // Check for 'demo' (case-insensitive so uppercase works too)
+        if (loginUser.toLowerCase() === "demo" && loginPass.toLowerCase() === "demo") {
+            setIsLoggedIn(true);
+            setShowLoginModal(false);
+            setLoginError("");
+        } else {
+            setLoginError("Invalid credentials. Hint: use DEMO");
+        }
+    }
+
     return (
         <>
             {/* Sidebar */}
@@ -149,16 +170,14 @@ function App() {
                 </button>
 
                 <div className="bottom">
-                    {/* --- NEW: Theme Toggle Button --- */}
+                    {/* Theme Toggle Button */}
                     <button 
                         title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
                         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                     >
                         {theme === "light" ? (
-                            /* Moon Icon */
                             <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                         ) : (
-                            /* Sun Icon */
                             <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                         )}
                     </button>
@@ -173,6 +192,7 @@ function App() {
             <div className="navbar">
                 <input
                     type="text"
+                    className="search-input"
                     placeholder={activeTab === "saved" ? "Search within saved..." : "Search"}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -182,6 +202,20 @@ function App() {
                         }
                     }}
                 />
+                
+                {/* --- NEW: Dynamic Nav Right Section --- */}
+                <div className="nav-right">
+                    {isLoggedIn ? (
+                        <div className="user-profile">
+                            <div className="avatar">D</div>
+                            <span className="username">DEMO</span>
+                        </div>
+                    ) : (
+                        <button className="login-btn" onClick={() => setShowLoginModal(true)}>
+                            Login
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Header for Saved Section */}
@@ -227,6 +261,44 @@ function App() {
                     photo={selectedPhoto}
                     onClose={() => setSelectedPhoto(null)}
                 />
+            )}
+
+            {/* --- NEW: Login Modal Card --- */}
+            {showLoginModal && (
+                <div className="auth-backdrop" onClick={() => setShowLoginModal(false)}>
+                    <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-btn" onClick={() => setShowLoginModal(false)}>✕</button>
+                        
+                        <div className="logo" style={{ marginBottom: "10px" }}> 
+                            <img src={logoImage} alt="Logo" style={{ width: "40px", height: "40px", objectFit: "contain" }} />
+                        </div>
+                        
+                        <h2>Welcome to Pinterest</h2>
+                        <p style={{ color: "#777", marginBottom: "20px" }}>Log in to see your saved pins.</p>
+
+                        {loginError && <p className="error-msg">{loginError}</p>}
+                        
+                        <input 
+                            type="text" 
+                            placeholder="USERNAME (DEMO)" 
+                            value={loginUser}
+                            onChange={(e) => setLoginUser(e.target.value)}
+                            className="modal-input uppercase-input"
+                        />
+                        <input 
+                            type="password" 
+                            placeholder="PASSWORD (DEMO)" 
+                            value={loginPass}
+                            onChange={(e) => setLoginPass(e.target.value)}
+                            className="modal-input uppercase-input"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleLogin();
+                            }}
+                        />
+                        
+                        <button className="login-submit-btn" onClick={handleLogin}>Log In</button>
+                    </div>
+                </div>
             )}
 
             {/* End */}
