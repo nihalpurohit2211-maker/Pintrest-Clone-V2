@@ -22,7 +22,8 @@ function App() {
     // Load Random Feed
     // -------------------------
     function loadFeed() {
-        const random = 43;
+        // const random = 43;
+        const random = Math.floor(Math.random() * 50) + 1;
         setIsLoading(true);
         setPhotos([]);
 
